@@ -1,0 +1,446 @@
+package cpj.sesion3.lab;
+
+import java.io.BufferedReader;
+import java.io.Console;
+import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class BasicLibDemo {
+	private String[] opciones = { "Circulo", "Rectangulo", "Cadena(String)", "Fechas", "Lista(Nuevo elemento)",
+			"Lista(Mostrar contenido)", "Salir", "Mostrar fechas" };
+	
+	private static String[] menuFechas = { "Agregar", "Eliminar", "Buscar", "Visualizar" };
+	private static List<String> lista = new ArrayList<>();
+	private static List<String> listaFechas = new ArrayList<>();
+	private static List<LocalDate> listaFechasTipoFecha = new ArrayList<>();
+
+	public static void main(String[] args) throws Exception {
+		
+		BasicLibDemo m = new BasicLibDemo();
+		m.mostrarMenu();
+		
+		//int opcion = m.leerOpcionValida();
+		//m.procesarOpcion(opcion);
+		mostrarOpciones(m);
+		
+	}
+
+	void mostrarMenu() {
+		int n = 1;
+		for (String opc : opciones) {
+			System.out.format("%d.- %s%n", n++, opc);
+		}
+	}
+
+	int leerOpcionValida() {
+		int opc;
+		try {
+			opc = leerOpcion();
+			return opc;
+		} catch (Exception e) {
+			return leerOpcionValida();
+		}
+	}
+
+	int leerOpcion() throws Exception {
+		/**
+		Console c = System.console();
+		if(c == null) {
+			System.out.println("Consola no soportada");
+			System.exit(1);
+		}*/
+		
+		/**
+		 * laboratorio 3 - 1.2
+		 */
+		
+		Scanner scan = new Scanner(System.in);
+		System.out.print("Seleccione una opcion: ");
+		int op = scan.nextInt();
+		
+		if (esOpcionValida(op))
+			return op;
+		else
+			throw new Exception("La opcion seleccionada no es valida");
+
+	}
+
+	private boolean esOpcionValida(int dia) {
+		return dia > 0 && dia <= opciones.length;
+	}
+
+	void procesarOpcion(int opcion) {
+		Scanner scan = new Scanner(System.in);
+		switch (opcion) {
+		case 1:
+			procesarCirculo(scan);
+			mostrarOpciones(new BasicLibDemo());
+			break;
+		case 2:
+			procesarRectangulo(scan);
+			mostrarOpciones(new BasicLibDemo());
+			break;
+		case 3:
+			procesarCadena(scan);
+			mostrarOpciones(new BasicLibDemo());
+			break;
+		case 4:
+			mostrarMenuFechas(menuFechas, new BasicLibDemo());
+			break;
+
+		case 5:
+			agregarElementoLista(lista, scan);
+			mostrarOpciones(new BasicLibDemo());
+			break;
+		case 6:
+			mostrarContenidoLista(lista);
+			mostrarOpciones(new BasicLibDemo());
+			break;
+		case 7:
+			terminarPrograma();
+			break;
+		case 8:
+			mostrarFechas(listaFechasTipoFecha, scan);
+			break;
+		default:
+			System.exit(0);
+			break;
+		}
+		scan.close();
+	}
+	
+	private void mostrarMenuFechas(String[] menu, BasicLibDemo basicLibDemo) {
+		System.out.println("*** Menú Fechas ***");
+		int n = 1;
+		for (String opc : menu) {
+			System.out.format("    %d.- %s%n", n++, opc);
+		}
+		int opcion = leerOpcionMenuFecha(menu);
+		procesarOpcionMenuFecha(opcion, basicLibDemo);
+	}
+	
+	private static void procesarOpcionMenuFecha(int opcion, BasicLibDemo basicLibDemo) {
+		Scanner scan = new Scanner(System.in);
+		switch (opcion) {
+		case 1:
+			basicLibDemo.procesarFechas(listaFechas, scan);
+			break;
+		case 2:
+			basicLibDemo.eliminarFechaPrincipal(scan);
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	void eliminarFechaPrincipal(Scanner scan) {
+		System.out.println();
+		System.out.println("Opción Eliminar Fecha");
+		System.out.print("Ingrese una fecha usando el formato dia/mes: ");
+		String fecha = scan.next();
+		
+		boolean esValida = verificarFechaValida(fecha);
+		if(esValida == false) {
+			System.out.println("*** Fecha NO válida");
+			mostrarMenuFechas(menuFechas, new BasicLibDemo());
+			return;
+		}
+		
+		boolean existe = existeEnListaTipoFecha(listaFechasTipoFecha, fecha);
+		if(existe == false) {
+			System.out.println("*** NO existe la fecha indicada");
+			mostrarMenuFechas(menuFechas, new BasicLibDemo());
+			return;
+		}
+		
+		eliminarFecha(fecha);
+		mostrarMenuFechas(menuFechas, new BasicLibDemo());
+	}
+	
+	private static void eliminarFecha(String fechaString) {
+		BasicLibDemo b = new BasicLibDemo();
+		
+		LocalDate fechaLocalDateAEliminar = b.crearFechaSinFormato(fechaString);
+		listaFechasTipoFecha.remove(fechaLocalDateAEliminar);
+		
+		String fechaStringAEliminar = b.crearFechaSinFormato(fechaString).toString();
+		eliminarFechaDeListaString(fechaStringAEliminar);
+		
+		System.out.println(listaFechas);
+		System.out.println("*** Eliminado con éxito!");
+		System.out.println();
+	}
+	
+	private static void eliminarFechaDeListaString(String fecha) {
+		int indiceAEliminar = -1;
+		String dia = fecha.split("-")[2];
+		String mes = fecha.split("-")[1];
+		
+		for (int i = 0; i < listaFechas.size(); i++) {
+			if(listaFechas.get(i).contains(dia+"/"+mes)) {
+				indiceAEliminar = i;
+				break;
+			}
+		}
+		listaFechas.remove(indiceAEliminar);
+	}
+	
+	private static boolean esOpcionValidaFechas(int opcionSeleccionada, String[] menu) {
+		return opcionSeleccionada > 0 && opcionSeleccionada <= menu.length;
+	}
+	
+	private static int leerOpcionDelMenuFecha(String[] menu) throws Exception {
+		Scanner scan = new Scanner(System.in);
+		System.out.print("Seleccione una opcion: ");
+		int op = scan.nextInt();
+		
+		if (esOpcionValidaFechas(op, menu))
+			return op;
+		else
+			throw new Exception("La opcion seleccionada no es valida");
+
+	}
+	
+	private static int leerOpcionValidaDelMenuFecha(String[] menu) {
+		int opc;
+		try {
+			opc = leerOpcionDelMenuFecha(menu);
+			return opc;
+		} catch (Exception e) {
+			return leerOpcionValidaDelMenuFecha(menu);
+		}
+	}
+	
+	private static int leerOpcionMenuFecha(String[] menu) {
+		int opcion = leerOpcionValidaDelMenuFecha(menu);
+		return opcion;
+	}
+
+	private void agregarElementoLista(List<String> lista, Scanner scan) {
+		System.out.print("Ingrese elemento: ");
+		String cad = scan.nextLine();
+		lista.add(cad);
+	}
+
+	private void mostrarContenidoLista(List<String> lista) {
+		System.out.println("Contenido de la lista es:");
+		for (String elem : lista) {
+			System.out.println(elem);
+		}
+	}
+
+	private void terminarPrograma() {
+		System.out.println("Programa terminado");
+		System.exit(0);
+	}
+
+	private void procesarCadena(Scanner scan) {
+		System.out.print("Ingrese un string: ");
+		String cad1 = scan.next();
+		System.out.print("Ingrese otro string: ");
+		String cad2 = scan.next();
+		
+		String cad3 = procesarTercerCaracter(scan);
+		
+		int pos = cad1.toLowerCase().indexOf(cad2.toLowerCase());
+		if (pos >= 0) {
+			System.out.format("La cadena '%s' es parte de '%s', y se encuentra en la posicion %d%n", cad2, cad1,
+					pos);
+			System.out.format("Con la subcadena('%s') eliminada seria '%s'%n",cad2, cad1.toLowerCase().replace(cad2.toLowerCase(), ""));
+			System.out.format("Con la subcadena('%s') remplazada por '%s' seria '%s'%n", cad2, cad3, cad1.toLowerCase().replace(cad2.toLowerCase(), cad3));
+		} else {
+			System.out.format("La cadena '%s' NO es parte de '%s'", cad2, cad1);
+		}
+	}
+
+	private void procesarRectangulo(Scanner scan) {
+		System.out.print("Ingrese la base del rectángulo: ");
+		int base = scan.nextInt();
+		System.out.print("Ingrese la altura del rectángulo: ");
+		int altura = scan.nextInt();
+		System.out.println("Área: "+ base * altura);
+	}
+
+	private void procesarCirculo(Scanner scan) {
+		System.out.print("Ingrese el radio: ");
+		String radioStr = scan.next();
+		
+		/**
+		 * laboratorio 3 - 1.1
+		 */
+		double radio = Double.parseDouble(radioStr);
+		System.out.format("El area del circulo con radio (%.3f) es %.3f (%.3f * %1$.3f * %1$.3f) %n", radio, getAreaCirculo(radio), Math.PI);
+		System.out.println("Resumen de datos:");
+		System.out.format("radio:%6.3f %n", radio);
+		System.out.format("área:%7.3f %n", getAreaCirculo(radio));
+		/**
+		 * fin laboratorio 3 - 1.1
+		 */
+	}
+
+	private double getAreaCirculo(double radio) {
+		return Math.PI * Math.pow(radio, 2);
+	}
+	
+	private static boolean esCaracterValido(String c) throws Exception{
+		if(c.equals("*") || c.equals("#") || c.equals(".") || c.equals("-") || c.equals("/")) {
+			return true;
+		} else {			
+			throw new Exception("El caracter no es valido");
+		}
+	}
+	
+	private static String procesarTercerCaracter(Scanner scan) {
+		System.out.print("Escoja un caracter especial(*#.-/): ");
+		String cad3 = scan.next();
+		
+		try {
+			esCaracterValido(cad3);
+			return cad3;
+		} catch (Exception e) {
+			return procesarTercerCaracter(scan);
+		}
+	
+	}
+	
+	private static void mostrarOpciones(BasicLibDemo m) {
+		int opcion = m.leerOpcionValida();
+		m.procesarOpcion(opcion);
+	}
+	
+	
+	// Tarea laboratorio 3
+	
+	private void procesarFechas(List<String> fechas,Scanner scan) {
+		String formato = agregarFormato(scan);
+		
+		System.out.print("Ingrese una fecha usando el formato dia/mes: ");
+		String fecha = scan.next();
+		
+		boolean esValida = verificarFechaValida(fecha);
+		if(esValida == false) {
+			System.out.println("*** Fecha NO válida");
+			mostrarMenuFechas(menuFechas, new BasicLibDemo());
+			return;
+		}
+		
+		// Verificar si existe en la lista tipo fecha
+		boolean existe = existeEnListaTipoFecha(listaFechasTipoFecha, fecha);
+		if(existe == true) {
+			System.out.println("*** Fecha NO agregada, ya existe en la lista");
+			mostrarMenuFechas(menuFechas, new BasicLibDemo());
+			return;
+		}
+		
+		// Crear la fecha
+		String fechaValida = crearFecha(fecha, formato);
+		// Agregar fecha a la lista tipo String
+		agregarFechaALista(fechas, fechaValida);
+		// Agregar fecha a la lista tipo LocalDate
+		agregarFechaAListaTipoFecha(listaFechasTipoFecha, fecha);
+		
+		//mostrarOpciones(new BasicLibDemo());
+		mostrarMenuFechas(menuFechas, new BasicLibDemo());
+	}
+	
+	// dia/mes   max 2 digitos en dia y mes
+	private boolean verificarFechaValida(String fecha) {
+		 String regex = "^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])$";
+	     Pattern pattern = Pattern.compile(regex);
+	     Matcher matcher = pattern.matcher(fecha);
+	     return matcher.matches();
+	}
+	
+	private String crearFecha(String fechaString, String formato) {
+		//DateTimeFormatter dfFormat = DateTimeFormatter.ofPattern("EEEE dd/MM/yyyy", Locale.of("es", "PE"));
+		DateTimeFormatter dfFormat = DateTimeFormatter.ofPattern(formato, Locale.of("es", "PE"));
+		
+		int dia = extraer(fechaString, 0);
+		int mes = extraer(fechaString, 1);
+		
+		String fecha = LocalDate.of(Year.now().getValue(), mes, dia).format(dfFormat);
+		return fecha;
+	}
+
+	private String agregarFormato(Scanner scan) {
+		System.out.println();
+		System.out.println("Ejemplo de formato: EEEE dd/MM/yyyy");
+		System.out.print("Ingrese un formato de fecha, si no tiene escriba SF: ");
+		String formato = scan.nextLine();
+		
+		if(formato.toLowerCase().equals("sf")) {
+			return "EEEE dd/MM/yyyy";
+		}else {
+			return formato;
+		}
+	}
+	
+	private int extraer(String fecha, int i) {
+		String [] arrayString = fecha.split("/");
+		return Integer.parseInt(arrayString[i]);
+	}
+	
+	private void agregarFechaALista(List<String> listaF, String fecha) {
+		listaF.add(fecha);
+		System.out.println("*** Fecha agregada!");
+		System.out.println(listaFechas);
+	}
+	
+	private boolean existeEnListaTipoFecha(List<LocalDate> listaTipofecha, String fechaString) {
+		LocalDate fecha = crearFechaSinFormato(fechaString);
+		return listaTipofecha.contains(fecha);
+	}
+	
+	private LocalDate crearFechaSinFormato(String fechaString) {
+		int dia = extraer(fechaString, 0);
+		int mes = extraer(fechaString, 1);
+		
+		LocalDate fecha = LocalDate.of(Year.now().getValue(), mes, dia);
+		return fecha;
+	}
+	
+	private void agregarFechaAListaTipoFecha(List<LocalDate> listaTipofecha, String fechaString) {
+		LocalDate fecha = crearFechaSinFormato(fechaString);
+		listaTipofecha.add(fecha);
+	}
+	
+	private void mostrarFechas(List<LocalDate> list, Scanner scan) {
+		System.out.println();
+		System.out.println("Mostrar fechas");
+		System.out.println("1. Orden cronológico");
+		System.out.println("2. Orden de creación");
+		System.out.println();
+		System.out.print("Seleccione una opción: ");
+		String modo = scan.next();
+		switch (modo) {
+		case "1":
+			mostrarEnOrdenCronologico(list);
+			break;
+		case "2":
+			System.out.println(listaFechas);
+			break;
+		default:
+			break;
+		}
+		
+		mostrarOpciones(new BasicLibDemo());
+	}
+	
+	private void mostrarEnOrdenCronologico(List<LocalDate> li) {
+		// Ordenar la lista en orden cronológico
+        Collections.sort(li);
+        for (LocalDate fecha : li) {
+            System.out.println(fecha);
+        }
+	}
+}

@@ -1,0 +1,8 @@
+1720324771536	Extract method 'agregarFormato'
+1720809489355	Copy package
+1720809968391	Rename method 'mostrarMensaje'
+1720811326204	Extract superclass 'ConsolaApp'
+1720820466662	Extract method 'start'
+1720820920199	Pull up 'mostrarOpciones()' to 'ConsolaApp'
+1720820957247	Pull up 'start()' to 'ConsolaApp'
+1720903663813	Rename type 'Agenda'

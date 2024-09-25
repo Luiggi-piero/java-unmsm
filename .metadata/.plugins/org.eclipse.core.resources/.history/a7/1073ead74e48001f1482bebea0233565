@@ -1,0 +1,16 @@
+package cpj.sesion7.generic;
+
+import java.util.List;
+
+public class HerenciaDemo {
+	
+	
+	static void procesar(List<Persona> personas) {
+		
+	}
+	
+	public static void main(String[] args) {
+		procesar(List.of(new Persona(), new Persona()));
+	}
+	
+}

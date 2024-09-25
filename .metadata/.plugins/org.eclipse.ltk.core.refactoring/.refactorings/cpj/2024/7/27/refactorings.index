@@ -1,0 +1,12 @@
+1719974394083	Extract method 'getAreaCirculo'
+1719976493747	Extract method 'procesarCirculo'
+1719976534973	Extract method 'procesarRectangulo'
+1719976631869	Extract method 'procesarCadena'
+1719979270182	Rename method 'procesarArreglo'
+1720059300030	Extract method 'terminarPrograma'
+1720059423790	Extract method 'mostrarContenidoLista'
+1720059618597	Extract method 'agregarElementoLista'
+1720152090517	Extract local variable 'ahora'
+1720190934729	Copy compilation unit
+1720204165779	Copy compilation units
+1720213774230	Extract method 'personaEqual'

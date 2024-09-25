@@ -1,0 +1,6 @@
+package cpj.sesion7.generic;
+
+abstract class Persona {
+
+	abstract void hacerSonido();
+}

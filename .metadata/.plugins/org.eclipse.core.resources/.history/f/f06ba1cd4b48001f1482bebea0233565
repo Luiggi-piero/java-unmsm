@@ -1,0 +1,15 @@
+package cpj.sesion7.generic;
+
+public class Cat extends Animal implements Comparable<Cat> {
+
+	@Override
+	void hacerSonido() {
+		System.out.println("soy un gato...miau");
+	}
+
+	@Override
+	public int compareTo(Cat o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+}

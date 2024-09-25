@@ -1,0 +1,14 @@
+package cpj.sesion7.generic;
+
+import java.util.List;
+
+public class HerenciaDemo {
+	
+	public static void main(String[] args) {
+		
+	}
+	
+	void procesar(List<Persona> persona) {
+		
+	}
+}

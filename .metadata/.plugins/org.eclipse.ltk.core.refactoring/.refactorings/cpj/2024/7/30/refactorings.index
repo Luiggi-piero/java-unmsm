@@ -1,0 +1,16 @@
+1721664703861	Extract method 'demoContiene'
+1721666820753	Copy compilation unit
+1721666823972	Copy compilation unit
+1721668377106	Copy compilation unit
+1721668413845	Copy compilation unit
+1721669625904	Extract method 'demoConList'
+1721836653499	Delete elements
+1721836664609	Delete elements
+1721836671531	Delete element
+1721839203695	Copy compilation unit
+1722094382596	Rename type 'nombresNumeros'
+1722097606212	Extract method 'generarArreglo'
+1722097755928	Rename local variable 'indicesDeNumeros'
+1722097791870	Rename local variable 'arrIndicesNumeros'
+1722097836856	Rename local variable 'numerosArreglo'
+1722110812157	Extract method 'solicitarDiaMes'

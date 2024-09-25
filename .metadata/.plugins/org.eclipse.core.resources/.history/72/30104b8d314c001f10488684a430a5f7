@@ -1,0 +1,98 @@
+package cpj.sesion3.lab1;
+
+import java.util.ArrayList;
+
+public class NombresNumeros {
+	public static void main(String[] args) {
+		processArray(args);
+	}
+
+	private static void processArray(String[] arr) {
+		ArrayList<String> numeros = new ArrayList<String>();
+		ArrayList<String> nombres = new ArrayList<String>();
+		
+		String[] numerosArr = new String[30];
+		String indicesDeNumeros = "";
+		
+		
+		String[] nombresArr = new String[30];
+
+		for (int i = 0; i < arr.length; i++) {
+			if (isNumeric(arr[i])) {
+				numeros.add(arr[i]);
+				indicesDeNumeros += "-" + i;
+			} else {
+				nombres.add(arr[i]);
+			}
+		}
+
+		showArray(nombres);
+		System.out.println();
+		showArray(numeros);
+		System.out.println();
+		System.out.print(add(numeros));
+		
+		String[] arrIndicesNumeros = indicesDeNumeros.split("-");
+		System.out.println(arrIndicesNumeros.toString());
+	}
+
+	// Comprueba si es un numero
+	private static boolean isNumeric(String str) {
+		try {
+			Double.parseDouble(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	private static void showArray(ArrayList<String> arr) {
+		for (int i = 0; i < arr.size(); i++) {
+			if (i == arr.size() - 1) {
+				System.out.printf("%s", arr.get(i));
+				return;
+			}
+			System.out.printf("%s, ", arr.get(i));
+		}
+	}
+
+	private static Double add(ArrayList<String> arr) {
+		ArrayList<Double> newArray = new ArrayList<Double>();
+		Double result = 0.0;
+		
+		// Convierte y agrega a newArray
+		for (int i = 0; i < arr.size(); i++) {
+			newArray.add(Double.parseDouble(arr.get(i)));
+		}
+
+		// Suma los elementos de newArray
+		for (int i = 0; i < newArray.size(); i++) {
+			result += newArray.get(i);
+		}
+		
+		return result;
+	}
+}
+
+
+
+
+
+
+
+
+
+/**
+ * Operadores
+ * =   <  ++  - ==
+ * 
+ * Controles de flujo
+ * if   else   for  return
+ * 
+ * Variables primitivas
+ * int
+ * 
+ * Varibles de tipo referencia
+ * Double   ArrayList   String
+ * 
+ */
